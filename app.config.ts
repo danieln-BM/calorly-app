@@ -65,6 +65,7 @@ const config: ExpoConfig = {
     bundler: "metro",
     output: "static",
     favicon: "./assets/images/favicon.png",
+    publicPath: "/calorly-app",
   },
   plugins: [
     "expo-router",
@@ -104,6 +105,7 @@ const config: ExpoConfig = {
   experiments: {
     typedRoutes: true,
     reactCompiler: true,
+    baseUrl: "/calorly-app",
   },
 };
 
