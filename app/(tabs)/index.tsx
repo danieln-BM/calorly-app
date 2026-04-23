@@ -8,6 +8,7 @@ import {
   ActivityIndicator,
   TextInput,
   Image,
+  ImageBackground,
 } from "react-native";
 import { useFocusEffect, useRouter } from "expo-router";
 import Svg, { Circle } from "react-native-svg";
@@ -425,16 +426,27 @@ export default function HomeScreen() {
         </View>
 
         {/* Calorie Ring Card */}
-        <View
+        <ImageBackground
+          source={require("@/assets/images/food/berry-bowl-bg.webp")}
           style={{
             marginHorizontal: 16,
-          backgroundColor: colors.surface,
+            borderRadius: 20,
+            overflow: "hidden",
+            marginBottom: 16,
+          }}
+          imageStyle={{
+            borderRadius: 20,
+            opacity: 0.13,
+          }}
+        >
+        <View
+          style={{
+            backgroundColor: "rgba(244,241,237,0.82)",
           borderRadius: 20,
           padding: 20,
           alignItems: "center",
           borderWidth: 1,
           borderColor: colors.border,
-          marginBottom: 16,
           }}
         >
           <CalorieRing
@@ -498,6 +510,7 @@ export default function HomeScreen() {
             </Pressable>
           )}
         </View>
+        </ImageBackground>
 
         {/* Free Tier Banner */}
         {!isPremium && (
