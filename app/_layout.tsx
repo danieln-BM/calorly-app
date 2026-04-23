@@ -112,7 +112,7 @@ export default function RootLayout() {
             <Stack.Screen name="bmi-detail" />
             <Stack.Screen name="bmr-detail" />
           </Stack>
-          <StatusBar style="auto" />
+          <StatusBar style="light" />
           </SubscriptionProvider>
         </QueryClientProvider>
       </trpc.Provider>

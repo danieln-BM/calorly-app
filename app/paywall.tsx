@@ -1,12 +1,8 @@
 /**
- * Paywall Screen — 3-Screen Sequence with A/B Trial Variant + Brand Design
+ * Paywall Screen — 3-Screen Sequence with A/B Trial Variant
+ * Dark mode: neon green + orange on pure black — Apple-premium aesthetic
  *
- * Design language: warm orange/peach gradients, avocado mascot, bold playful
- * typography, rounded pill buttons — matching the Calorly brand identity.
- *
- * Trial length is controlled by TRIAL_VARIANT:
- *   "A" → 3-day free trial
- *   "B" → 7-day free trial
+ * TRIAL_VARIANT: "A" = 3-day trial, "B" = 7-day trial
  */
 
 import React, { useEffect, useRef, useState } from "react";
@@ -20,8 +16,6 @@ import {
   Image,
 } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { LinearGradient } from "expo-linear-gradient";
-import { useColors } from "@/hooks/use-colors";
 import { useSubscription } from "@/lib/subscription-provider";
 import {
   trackPaywallViewed,
@@ -33,15 +27,22 @@ import { trackAttGranted, trackAttDenied, trackAttPromptShown } from "@/lib/sing
 import { trackPermissionResult } from "@/lib/analytics";
 
 // ─── Mascot ───────────────────────────────────────────────────────────────────
-const MASCOT_HERO = require("@/assets/images/mascot/mascot-hero.png");
+const MASCOT_HERO      = require("@/assets/images/mascot/mascot-hero.png");
 const MASCOT_CELEBRATE = require("@/assets/images/mascot/mascot-celebrate.png");
+const MASCOT_VICTORY   = require("@/assets/images/mascot/mascot-victory.png");
 
-// ─── Brand ────────────────────────────────────────────────────────────────────
-const BRAND = {
-  orange: "#FF8C42",
-  orangeLight: "#FFAD6B",
-  gradientBg: ["#FFF5E6", "#FFE4C4"] as [string, string],
-  gradientHero: ["#FF8C42", "#FFD580"] as [string, string],
+// ─── Dark palette ─────────────────────────────────────────────────────────────
+const D = {
+  bg:           "#000000",
+  surface:      "#0D0D0D",
+  card:         "#111111",
+  cardBorder:   "#1C1C1E",
+  neonGreen:    "#39FF14",
+  neonGreenDim: "#1A7A0A",
+  orange:       "#FF8C00",
+  orangeDim:    "#7A3D00",
+  text:         "#F5F5F5",
+  textMuted:    "#6B7280",
 };
 
 // ─── A/B Trial Variant ────────────────────────────────────────────────────────
@@ -68,15 +69,19 @@ async function requestATTPermission(): Promise<"granted" | "denied" | "unavailab
 // ─── Progress Dots ────────────────────────────────────────────────────────────
 function ProgressDots({ current, total }: { current: number; total: number }) {
   return (
-    <View style={{ flexDirection: "row", justifyContent: "center", gap: 8, marginBottom: 24 }}>
+    <View style={{ flexDirection: "row", justifyContent: "center", gap: 8, marginBottom: 28 }}>
       {Array.from({ length: total }).map((_, i) => (
         <View
           key={i}
           style={{
-            width: i === current ? 24 : 8,
+            width: i === current ? 28 : 8,
             height: 8,
             borderRadius: 4,
-            backgroundColor: i === current ? BRAND.orange : "rgba(255,140,66,0.25)",
+            backgroundColor: i === current ? D.neonGreen : D.cardBorder,
+            shadowColor: i === current ? D.neonGreen : "transparent",
+            shadowOffset: { width: 0, height: 0 },
+            shadowOpacity: i === current ? 0.8 : 0,
+            shadowRadius: 6,
           }}
         />
       ))}
@@ -85,255 +90,178 @@ function ProgressDots({ current, total }: { current: number; total: number }) {
 }
 
 // ─── Screen 1: Trial Offer ────────────────────────────────────────────────────
-function TrialOfferScreen({
-  trialDays,
-  onContinue,
-  onSkip,
-}: {
-  trialDays: number;
-  onContinue: () => void;
-  onSkip: () => void;
+function TrialOfferScreen({ trialDays, onContinue, onSkip }: {
+  trialDays: number; onContinue: () => void; onSkip: () => void;
 }) {
   return (
-    <LinearGradient colors={BRAND.gradientBg} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={{ flex: 1 }}>
+    <View style={{ flex: 1, backgroundColor: D.bg }}>
       <ScrollView contentContainerStyle={{ padding: 24, flexGrow: 1 }}>
         <ProgressDots current={0} total={3} />
 
-        {/* Mascot hero */}
-        <View style={{ alignItems: "center", marginBottom: 8 }}>
+        <View style={{ alignItems: "center", marginBottom: 12 }}>
           <Image source={MASCOT_HERO} style={{ width: 160, height: 160 }} resizeMode="contain" />
         </View>
 
-        {/* Headline */}
-        <Text style={{ fontSize: 32, fontWeight: "900", color: "#2D2D2D", textAlign: "center", letterSpacing: -1, marginBottom: 8, lineHeight: 38 }}>
-          Unlock Your{"\n"}Full Potential! 🥑
+        <Text style={{ fontSize: 32, fontWeight: "900", color: D.text, textAlign: "center", letterSpacing: -1, marginBottom: 8, lineHeight: 38 }}>
+          Unlock Your{"\n"}
+          <Text style={{ color: D.neonGreen, textShadowColor: D.neonGreen, textShadowOffset: { width: 0, height: 0 }, textShadowRadius: 12 }}>
+            Full Potential
+          </Text>
         </Text>
-        <Text style={{ fontSize: 15, color: "#666", textAlign: "center", lineHeight: 22, marginBottom: 28 }}>
-          Start your <Text style={{ fontWeight: "800", color: BRAND.orange }}>{trialDays}-day free trial</Text> and get full access to every Calorly Pro feature.
+        <Text style={{ fontSize: 15, color: D.textMuted, textAlign: "center", lineHeight: 22, marginBottom: 28 }}>
+          Start your{" "}
+          <Text style={{ fontWeight: "800", color: D.orange }}>{trialDays}-day free trial</Text>
+          {" "}and get full access to every Calorly Pro feature.
         </Text>
 
         {/* Feature list */}
-        <View
-          style={{
-            backgroundColor: "#fff",
-            borderRadius: 20,
-            padding: 20,
-            marginBottom: 20,
-            shadowColor: "#000",
-            shadowOffset: { width: 0, height: 4 },
-            shadowOpacity: 0.07,
-            shadowRadius: 12,
-            elevation: 3,
-          }}
-        >
+        <View style={{ backgroundColor: D.card, borderRadius: 20, padding: 20, marginBottom: 20, borderWidth: 1.5, borderColor: D.cardBorder }}>
           {[
-            { icon: "📸", label: "AI photo & voice food logging" },
-            { icon: "📊", label: "Full macro breakdown (protein, carbs, fat)" },
-            { icon: "🔥", label: "Unlimited food & exercise logs" },
-            { icon: "📈", label: "Progress charts & streak tracking" },
-            { icon: "💧", label: "Personalised hydration goals" },
-          ].map((f) => (
-            <View key={f.label} style={{ flexDirection: "row", alignItems: "center", gap: 12, marginBottom: 12 }}>
-              <View style={{ width: 36, height: 36, borderRadius: 18, backgroundColor: BRAND.orange + "20", alignItems: "center", justifyContent: "center" }}>
-                <Text style={{ fontSize: 18 }}>{f.icon}</Text>
+            { icon: require("@/assets/images/icons/icon-camera.png"),    label: "AI photo & voice food logging" },
+            { icon: require("@/assets/images/icons/icon-chart.png"),     label: "Full macro breakdown" },
+            { icon: require("@/assets/images/icons/icon-lightning.png"), label: "Unlimited food & exercise logs" },
+            { icon: require("@/assets/images/icons/icon-running.png"),   label: "Progress charts & streak tracking" },
+            { icon: require("@/assets/images/icons/icon-water-drop.png"),label: "Personalised hydration goals" },
+          ].map((f, i) => (
+            <View key={i} style={{ flexDirection: "row", alignItems: "center", gap: 12, marginBottom: i < 4 ? 14 : 0 }}>
+              <View style={{ width: 38, height: 38, borderRadius: 19, backgroundColor: D.neonGreenDim, alignItems: "center", justifyContent: "center", borderWidth: 1, borderColor: D.neonGreen + "50" }}>
+                <Image source={f.icon} style={{ width: 22, height: 22, tintColor: D.neonGreen }} resizeMode="contain" />
               </View>
-              <Text style={{ fontSize: 15, color: "#2D2D2D", fontWeight: "600", flex: 1 }}>{f.label}</Text>
-              <Text style={{ fontSize: 14, color: BRAND.orange, fontWeight: "800" }}>✓</Text>
+              <Text style={{ fontSize: 15, color: D.text, fontWeight: "600", flex: 1 }}>{f.label}</Text>
+              <Text style={{ fontSize: 14, color: D.neonGreen, fontWeight: "900" }}>✓</Text>
             </View>
           ))}
         </View>
 
         {/* Pricing note */}
-        <View
-          style={{
-            backgroundColor: BRAND.orange + "15",
-            borderRadius: 16,
-            padding: 14,
-            borderWidth: 2,
-            borderColor: BRAND.orange + "30",
-            marginBottom: 24,
-          }}
-        >
-          <Text style={{ fontSize: 13, color: "#555", textAlign: "center", lineHeight: 20 }}>
+        <View style={{ backgroundColor: D.orangeDim + "80", borderRadius: 16, padding: 14, borderWidth: 1.5, borderColor: D.orange + "40", marginBottom: 24 }}>
+          <Text style={{ fontSize: 13, color: D.textMuted, textAlign: "center", lineHeight: 20 }}>
             After your {trialDays}-day free trial, you'll be billed{" "}
-            <Text style={{ fontWeight: "800", color: BRAND.orange }}>{ANNUAL_PRICE}/year</Text> (just{" "}
-            <Text style={{ fontWeight: "800", color: BRAND.orange }}>{ANNUAL_PRICE_PER_WEEK}/week</Text>). Cancel any time.
+            <Text style={{ fontWeight: "800", color: D.orange }}>{ANNUAL_PRICE}/year</Text>
+            {" "}(just{" "}
+            <Text style={{ fontWeight: "800", color: D.orange }}>{ANNUAL_PRICE_PER_WEEK}/week</Text>
+            ). Cancel any time.
           </Text>
         </View>
 
-        {/* CTA */}
         <Pressable
           onPress={onContinue}
           style={({ pressed }) => ({
-            backgroundColor: BRAND.orange,
-            borderRadius: 50,
-            padding: 18,
-            alignItems: "center",
-            marginBottom: 14,
-            opacity: pressed ? 0.85 : 1,
-            shadowColor: BRAND.orange,
-            shadowOffset: { width: 0, height: 6 },
-            shadowOpacity: 0.4,
-            shadowRadius: 10,
-            elevation: 5,
+            backgroundColor: D.neonGreen, borderRadius: 50, padding: 18, alignItems: "center", marginBottom: 14,
+            opacity: pressed ? 0.85 : 1, shadowColor: D.neonGreen, shadowOffset: { width: 0, height: 0 }, shadowOpacity: 0.6, shadowRadius: 16, elevation: 8,
           })}
         >
-          <Text style={{ fontSize: 18, fontWeight: "900", color: "#fff", letterSpacing: 0.3 }}>
+          <Text style={{ fontSize: 18, fontWeight: "900", color: "#000", letterSpacing: 0.3 }}>
             Start {trialDays}-Day Free Trial →
           </Text>
         </Pressable>
 
         <Pressable onPress={onSkip} style={{ alignItems: "center", padding: 10 }}>
-          <Text style={{ fontSize: 14, color: "#AAA" }}>No thanks, continue without Pro</Text>
+          <Text style={{ fontSize: 14, color: D.textMuted }}>No thanks, continue without Pro</Text>
         </Pressable>
       </ScrollView>
-    </LinearGradient>
+    </View>
   );
 }
 
 // ─── Screen 2: Timeline ───────────────────────────────────────────────────────
-function TimelineScreen({
-  trialDays,
-  onContinue,
-  onBack,
-}: {
-  trialDays: number;
-  onContinue: () => void;
-  onBack: () => void;
+function TimelineScreen({ trialDays, onContinue, onBack }: {
+  trialDays: number; onContinue: () => void; onBack: () => void;
 }) {
   const reminderDay = trialDays - 1;
   const items = [
-    { day: "Today", icon: "🎉", title: "Your free trial starts", desc: "Unlock every Pro feature immediately — no restrictions.", highlight: true },
-    { day: `Day ${reminderDay}`, icon: "🔔", title: "Reminder before billing", desc: `We'll send you a reminder so you're never caught off guard.`, highlight: false },
-    { day: `Day ${trialDays}`, icon: "💳", title: "Trial ends — billing starts", desc: `${ANNUAL_PRICE}/year unless you cancel before this date.`, highlight: false },
+    { day: "Today",           icon: "🎉", title: "Your free trial starts",     desc: "Unlock every Pro feature immediately — no restrictions.", highlight: true },
+    { day: `Day ${reminderDay}`, icon: "🔔", title: "Reminder before billing",  desc: `We'll send you a reminder so you're never caught off guard.`, highlight: false },
+    { day: `Day ${trialDays}`,   icon: "💳", title: "Trial ends — billing starts", desc: `${ANNUAL_PRICE}/year unless you cancel before this date.`, highlight: false },
   ];
 
   return (
-    <LinearGradient colors={BRAND.gradientBg} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={{ flex: 1 }}>
+    <View style={{ flex: 1, backgroundColor: D.bg }}>
       <ScrollView contentContainerStyle={{ padding: 24, flexGrow: 1 }}>
         <ProgressDots current={1} total={3} />
 
-        <Text style={{ fontSize: 28, fontWeight: "900", color: "#2D2D2D", textAlign: "center", marginBottom: 8, letterSpacing: -0.5 }}>
-          Here's how it works 📅
+        <Text style={{ fontSize: 28, fontWeight: "900", color: D.text, textAlign: "center", marginBottom: 8, letterSpacing: -0.5 }}>
+          Here's how it works
         </Text>
-        <Text style={{ fontSize: 15, color: "#666", textAlign: "center", marginBottom: 32, lineHeight: 22 }}>
+        <Text style={{ fontSize: 15, color: D.textMuted, textAlign: "center", marginBottom: 32, lineHeight: 22 }}>
           No surprises. Here's exactly what happens during your trial.
         </Text>
 
-        {/* Timeline */}
         <View style={{ marginBottom: 28 }}>
           {items.map((item, i) => (
             <View key={i} style={{ flexDirection: "row", gap: 16 }}>
               <View style={{ alignItems: "center", width: 48 }}>
-                <View
-                  style={{
-                    width: 48,
-                    height: 48,
-                    borderRadius: 24,
-                    backgroundColor: item.highlight ? BRAND.orange : "#fff",
-                    borderWidth: 2.5,
-                    borderColor: item.highlight ? BRAND.orange : "#E8E8E8",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    shadowColor: item.highlight ? BRAND.orange : "#000",
-                    shadowOffset: { width: 0, height: 3 },
-                    shadowOpacity: item.highlight ? 0.3 : 0.05,
-                    shadowRadius: 6,
-                    elevation: item.highlight ? 3 : 1,
-                  }}
-                >
+                <View style={{
+                  width: 48, height: 48, borderRadius: 24,
+                  backgroundColor: item.highlight ? D.neonGreenDim : D.card,
+                  borderWidth: 2, borderColor: item.highlight ? D.neonGreen : D.cardBorder,
+                  alignItems: "center", justifyContent: "center",
+                  shadowColor: item.highlight ? D.neonGreen : "transparent",
+                  shadowOffset: { width: 0, height: 0 },
+                  shadowOpacity: item.highlight ? 0.6 : 0,
+                  shadowRadius: 8,
+                }}>
                   <Text style={{ fontSize: 20 }}>{item.icon}</Text>
                 </View>
                 {i < items.length - 1 && (
-                  <View style={{ width: 2.5, flex: 1, minHeight: 36, backgroundColor: "#E8E8E8", marginVertical: 4, borderRadius: 2 }} />
+                  <View style={{ width: 2, flex: 1, minHeight: 36, backgroundColor: D.cardBorder, marginVertical: 4, borderRadius: 2 }} />
                 )}
               </View>
               <View style={{ flex: 1, paddingBottom: i < items.length - 1 ? 28 : 0 }}>
-                <Text style={{ fontSize: 11, fontWeight: "800", color: BRAND.orange, marginBottom: 2, letterSpacing: 0.5 }}>
+                <Text style={{ fontSize: 11, fontWeight: "800", color: item.highlight ? D.neonGreen : D.orange, marginBottom: 2, letterSpacing: 0.5 }}>
                   {item.day.toUpperCase()}
                 </Text>
-                <Text style={{ fontSize: 16, fontWeight: "800", color: "#2D2D2D", marginBottom: 4 }}>{item.title}</Text>
-                <Text style={{ fontSize: 14, color: "#888", lineHeight: 20 }}>{item.desc}</Text>
+                <Text style={{ fontSize: 16, fontWeight: "800", color: D.text, marginBottom: 4 }}>{item.title}</Text>
+                <Text style={{ fontSize: 14, color: D.textMuted, lineHeight: 20 }}>{item.desc}</Text>
               </View>
             </View>
           ))}
         </View>
 
-        {/* Cancel note */}
-        <View
-          style={{
-            backgroundColor: "#fff",
-            borderRadius: 16,
-            padding: 16,
-            flexDirection: "row",
-            alignItems: "center",
-            gap: 12,
-            marginBottom: 28,
-            shadowColor: "#000",
-            shadowOffset: { width: 0, height: 2 },
-            shadowOpacity: 0.05,
-            shadowRadius: 6,
-            elevation: 2,
-          }}
-        >
+        <View style={{ backgroundColor: D.card, borderRadius: 16, padding: 16, flexDirection: "row", alignItems: "center", gap: 12, marginBottom: 28, borderWidth: 1.5, borderColor: D.cardBorder }}>
           <Text style={{ fontSize: 28 }}>🛡️</Text>
-          <Text style={{ flex: 1, fontSize: 13, color: "#555", lineHeight: 20 }}>
-            Cancel any time in <Text style={{ fontWeight: "700" }}>Settings → Subscriptions</Text>. No questions asked.
+          <Text style={{ flex: 1, fontSize: 13, color: D.textMuted, lineHeight: 20 }}>
+            Cancel any time in <Text style={{ fontWeight: "700", color: D.text }}>Settings → Subscriptions</Text>. No questions asked.
           </Text>
         </View>
 
         <Pressable
           onPress={onContinue}
           style={({ pressed }) => ({
-            backgroundColor: BRAND.orange,
-            borderRadius: 50,
-            padding: 18,
-            alignItems: "center",
-            marginBottom: 14,
-            opacity: pressed ? 0.85 : 1,
-            shadowColor: BRAND.orange,
-            shadowOffset: { width: 0, height: 6 },
-            shadowOpacity: 0.4,
-            shadowRadius: 10,
-            elevation: 5,
+            backgroundColor: D.neonGreen, borderRadius: 50, padding: 18, alignItems: "center", marginBottom: 14,
+            opacity: pressed ? 0.85 : 1, shadowColor: D.neonGreen, shadowOffset: { width: 0, height: 0 }, shadowOpacity: 0.6, shadowRadius: 16, elevation: 8,
           })}
         >
-          <Text style={{ fontSize: 17, fontWeight: "800", color: "#fff" }}>Continue →</Text>
+          <Text style={{ fontSize: 17, fontWeight: "800", color: "#000" }}>Continue →</Text>
         </Pressable>
 
         <Pressable onPress={onBack} style={{ alignItems: "center", padding: 10 }}>
-          <Text style={{ fontSize: 14, color: "#AAA" }}>← Back</Text>
+          <Text style={{ fontSize: 14, color: D.textMuted }}>← Back</Text>
         </Pressable>
       </ScrollView>
-    </LinearGradient>
+    </View>
   );
 }
 
 // ─── Screen 3: Plan Selection ─────────────────────────────────────────────────
-function PlanSelectionScreen({
-  trialDays,
-  onStartTrial,
-  onBack,
-}: {
-  trialDays: number;
-  onStartTrial: (plan: "annual" | "monthly") => void;
-  onBack: () => void;
+function PlanSelectionScreen({ trialDays, onStartTrial, onBack }: {
+  trialDays: number; onStartTrial: (plan: "annual" | "monthly") => void; onBack: () => void;
 }) {
   const [selectedPlan, setSelectedPlan] = useState<"annual" | "monthly">("annual");
 
   return (
-    <LinearGradient colors={BRAND.gradientBg} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={{ flex: 1 }}>
+    <View style={{ flex: 1, backgroundColor: D.bg }}>
       <ScrollView contentContainerStyle={{ padding: 24, flexGrow: 1 }}>
         <ProgressDots current={2} total={3} />
 
         <View style={{ alignItems: "center", marginBottom: 8 }}>
-          <Image source={MASCOT_CELEBRATE} style={{ width: 140, height: 140 }} resizeMode="contain" />
+          <Image source={MASCOT_VICTORY} style={{ width: 140, height: 140 }} resizeMode="contain" />
         </View>
 
-        <Text style={{ fontSize: 28, fontWeight: "900", color: "#2D2D2D", textAlign: "center", marginBottom: 8, letterSpacing: -0.5 }}>
-          Choose your plan 🎉
+        <Text style={{ fontSize: 28, fontWeight: "900", color: D.text, textAlign: "center", marginBottom: 8, letterSpacing: -0.5 }}>
+          Choose your plan
         </Text>
-        <Text style={{ fontSize: 15, color: "#666", textAlign: "center", marginBottom: 28, lineHeight: 22 }}>
+        <Text style={{ fontSize: 15, color: D.textMuted, textAlign: "center", marginBottom: 28, lineHeight: 22 }}>
           Both plans include the same {trialDays}-day free trial.
         </Text>
 
@@ -341,51 +269,32 @@ function PlanSelectionScreen({
         <Pressable
           onPress={() => setSelectedPlan("annual")}
           style={({ pressed }) => ({
-            borderRadius: 20,
-            padding: 20,
-            marginBottom: 12,
-            borderWidth: 2.5,
-            borderColor: selectedPlan === "annual" ? BRAND.orange : "#E8E8E8",
-            backgroundColor: selectedPlan === "annual" ? BRAND.orange + "12" : "#fff",
+            borderRadius: 20, padding: 20, marginBottom: 12,
+            borderWidth: 2, borderColor: selectedPlan === "annual" ? D.neonGreen : D.cardBorder,
+            backgroundColor: selectedPlan === "annual" ? D.neonGreenDim : D.card,
             opacity: pressed ? 0.85 : 1,
-            shadowColor: selectedPlan === "annual" ? BRAND.orange : "#000",
-            shadowOffset: { width: 0, height: 4 },
-            shadowOpacity: selectedPlan === "annual" ? 0.2 : 0.05,
-            shadowRadius: 10,
-            elevation: selectedPlan === "annual" ? 4 : 1,
+            shadowColor: selectedPlan === "annual" ? D.neonGreen : "transparent",
+            shadowOffset: { width: 0, height: 0 },
+            shadowOpacity: selectedPlan === "annual" ? 0.4 : 0,
+            shadowRadius: 12, elevation: selectedPlan === "annual" ? 4 : 0,
           })}
         >
-          {/* Best value badge */}
-          <View
-            style={{
-              position: "absolute",
-              top: -12,
-              right: 16,
-              backgroundColor: BRAND.orange,
-              borderRadius: 10,
-              paddingHorizontal: 12,
-              paddingVertical: 4,
-            }}
-          >
-            <Text style={{ fontSize: 11, fontWeight: "900", color: "#fff", letterSpacing: 0.5 }}>BEST VALUE</Text>
+          <View style={{ position: "absolute", top: -12, right: 16, backgroundColor: D.orange, borderRadius: 10, paddingHorizontal: 12, paddingVertical: 4 }}>
+            <Text style={{ fontSize: 11, fontWeight: "900", color: "#000", letterSpacing: 0.5 }}>BEST VALUE</Text>
           </View>
-
           <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
             <View>
-              <Text style={{ fontSize: 18, fontWeight: "900", color: "#2D2D2D" }}>Annual</Text>
-              <Text style={{ fontSize: 13, color: "#888", marginTop: 2 }}>
-                {ANNUAL_PRICE_PER_WEEK}/week · billed {ANNUAL_PRICE}/year
-              </Text>
+              <Text style={{ fontSize: 18, fontWeight: "900", color: D.text }}>Annual</Text>
+              <Text style={{ fontSize: 13, color: D.textMuted, marginTop: 2 }}>{ANNUAL_PRICE_PER_WEEK}/week · billed {ANNUAL_PRICE}/year</Text>
             </View>
             <View style={{ alignItems: "flex-end" }}>
-              <Text style={{ fontSize: 26, fontWeight: "900", color: BRAND.orange }}>{ANNUAL_PRICE}</Text>
-              <Text style={{ fontSize: 11, color: "#AAA" }}>per year</Text>
+              <Text style={{ fontSize: 26, fontWeight: "900", color: D.neonGreen, textShadowColor: D.neonGreen, textShadowOffset: { width: 0, height: 0 }, textShadowRadius: 8 }}>{ANNUAL_PRICE}</Text>
+              <Text style={{ fontSize: 11, color: D.textMuted }}>per year</Text>
             </View>
           </View>
-
           {selectedPlan === "annual" && (
-            <View style={{ marginTop: 12, backgroundColor: BRAND.orange + "20", borderRadius: 10, padding: 8 }}>
-              <Text style={{ fontSize: 12, color: BRAND.orange, fontWeight: "800", textAlign: "center" }}>
+            <View style={{ marginTop: 12, backgroundColor: D.neonGreenDim, borderRadius: 10, padding: 8, borderWidth: 1, borderColor: D.neonGreen + "40" }}>
+              <Text style={{ fontSize: 12, color: D.neonGreen, fontWeight: "800", textAlign: "center" }}>
                 ✓ Selected — {trialDays} days free, then {ANNUAL_PRICE}/year
               </Text>
             </View>
@@ -396,79 +305,61 @@ function PlanSelectionScreen({
         <Pressable
           onPress={() => setSelectedPlan("monthly")}
           style={({ pressed }) => ({
-            borderRadius: 20,
-            padding: 20,
-            marginBottom: 28,
-            borderWidth: 2.5,
-            borderColor: selectedPlan === "monthly" ? BRAND.orange : "#E8E8E8",
-            backgroundColor: selectedPlan === "monthly" ? BRAND.orange + "12" : "#fff",
+            borderRadius: 20, padding: 20, marginBottom: 28,
+            borderWidth: 2, borderColor: selectedPlan === "monthly" ? D.neonGreen : D.cardBorder,
+            backgroundColor: selectedPlan === "monthly" ? D.neonGreenDim : D.card,
             opacity: pressed ? 0.85 : 1,
-            shadowColor: selectedPlan === "monthly" ? BRAND.orange : "#000",
-            shadowOffset: { width: 0, height: 4 },
-            shadowOpacity: selectedPlan === "monthly" ? 0.2 : 0.05,
-            shadowRadius: 10,
-            elevation: selectedPlan === "monthly" ? 4 : 1,
+            shadowColor: selectedPlan === "monthly" ? D.neonGreen : "transparent",
+            shadowOffset: { width: 0, height: 0 },
+            shadowOpacity: selectedPlan === "monthly" ? 0.4 : 0,
+            shadowRadius: 12, elevation: selectedPlan === "monthly" ? 4 : 0,
           })}
         >
           <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
             <View>
-              <Text style={{ fontSize: 18, fontWeight: "900", color: "#2D2D2D" }}>Monthly</Text>
-              <Text style={{ fontSize: 13, color: "#888", marginTop: 2 }}>
-                Billed {MONTHLY_PRICE}/month · cancel any time
-              </Text>
+              <Text style={{ fontSize: 18, fontWeight: "900", color: D.text }}>Monthly</Text>
+              <Text style={{ fontSize: 13, color: D.textMuted, marginTop: 2 }}>Billed {MONTHLY_PRICE}/month · cancel any time</Text>
             </View>
             <View style={{ alignItems: "flex-end" }}>
-              <Text style={{ fontSize: 26, fontWeight: "900", color: "#2D2D2D" }}>{MONTHLY_PRICE}</Text>
-              <Text style={{ fontSize: 11, color: "#AAA" }}>per month</Text>
+              <Text style={{ fontSize: 26, fontWeight: "900", color: D.text }}>{MONTHLY_PRICE}</Text>
+              <Text style={{ fontSize: 11, color: D.textMuted }}>per month</Text>
             </View>
           </View>
-
           {selectedPlan === "monthly" && (
-            <View style={{ marginTop: 12, backgroundColor: BRAND.orange + "20", borderRadius: 10, padding: 8 }}>
-              <Text style={{ fontSize: 12, color: BRAND.orange, fontWeight: "800", textAlign: "center" }}>
+            <View style={{ marginTop: 12, backgroundColor: D.neonGreenDim, borderRadius: 10, padding: 8, borderWidth: 1, borderColor: D.neonGreen + "40" }}>
+              <Text style={{ fontSize: 12, color: D.neonGreen, fontWeight: "800", textAlign: "center" }}>
                 ✓ Selected — {trialDays} days free, then {MONTHLY_PRICE}/month
               </Text>
             </View>
           )}
         </Pressable>
 
-        {/* Final CTA */}
         <Pressable
           onPress={() => onStartTrial(selectedPlan)}
           style={({ pressed }) => ({
-            backgroundColor: BRAND.orange,
-            borderRadius: 50,
-            padding: 18,
-            alignItems: "center",
-            marginBottom: 12,
-            opacity: pressed ? 0.85 : 1,
-            shadowColor: BRAND.orange,
-            shadowOffset: { width: 0, height: 6 },
-            shadowOpacity: 0.4,
-            shadowRadius: 10,
-            elevation: 5,
+            backgroundColor: D.neonGreen, borderRadius: 50, padding: 18, alignItems: "center", marginBottom: 12,
+            opacity: pressed ? 0.85 : 1, shadowColor: D.neonGreen, shadowOffset: { width: 0, height: 0 }, shadowOpacity: 0.6, shadowRadius: 16, elevation: 8,
           })}
         >
-          <Text style={{ fontSize: 18, fontWeight: "900", color: "#fff", letterSpacing: 0.3 }}>
+          <Text style={{ fontSize: 18, fontWeight: "900", color: "#000", letterSpacing: 0.3 }}>
             Try Free for {trialDays} Days →
           </Text>
         </Pressable>
 
-        <Text style={{ fontSize: 12, color: "#BBB", textAlign: "center", lineHeight: 18, marginBottom: 14 }}>
+        <Text style={{ fontSize: 12, color: D.textMuted, textAlign: "center", lineHeight: 18, marginBottom: 14 }}>
           Cancel any time before Day {trialDays} and you won't be charged. By continuing you agree to our Terms of Service and Privacy Policy.
         </Text>
 
         <Pressable onPress={onBack} style={{ alignItems: "center", padding: 10 }}>
-          <Text style={{ fontSize: 14, color: "#AAA" }}>← Back</Text>
+          <Text style={{ fontSize: 14, color: D.textMuted }}>← Back</Text>
         </Pressable>
       </ScrollView>
-    </LinearGradient>
+    </View>
   );
 }
 
 // ─── Main Paywall Screen ──────────────────────────────────────────────────────
 export default function PaywallScreen() {
-  const colors = useColors();
   const router = useRouter();
   const { source } = useLocalSearchParams<{ source?: string }>();
   const { isPremium } = useSubscription();
@@ -524,36 +415,24 @@ export default function PaywallScreen() {
 
   if (isProcessing) {
     return (
-      <LinearGradient colors={BRAND.gradientBg} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+      <View style={{ flex: 1, backgroundColor: D.bg, alignItems: "center", justifyContent: "center" }}>
         <Image source={MASCOT_CELEBRATE} style={{ width: 120, height: 120, marginBottom: 24 }} resizeMode="contain" />
-        <ActivityIndicator size="large" color={BRAND.orange} />
-        <Text style={{ marginTop: 16, fontSize: 15, color: "#666", fontWeight: "600" }}>Setting up your trial…</Text>
-      </LinearGradient>
+        <ActivityIndicator size="large" color={D.neonGreen} />
+        <Text style={{ marginTop: 16, fontSize: 15, color: D.textMuted, fontWeight: "600" }}>Setting up your trial…</Text>
+      </View>
     );
   }
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1, backgroundColor: D.bg }}>
       {paywallStep === 0 && (
-        <TrialOfferScreen
-          trialDays={trialDays}
-          onContinue={() => setPaywallStep(1)}
-          onSkip={handleDismiss}
-        />
+        <TrialOfferScreen trialDays={trialDays} onContinue={() => setPaywallStep(1)} onSkip={handleDismiss} />
       )}
       {paywallStep === 1 && (
-        <TimelineScreen
-          trialDays={trialDays}
-          onContinue={() => setPaywallStep(2)}
-          onBack={() => setPaywallStep(0)}
-        />
+        <TimelineScreen trialDays={trialDays} onContinue={() => setPaywallStep(2)} onBack={() => setPaywallStep(0)} />
       )}
       {paywallStep === 2 && (
-        <PlanSelectionScreen
-          trialDays={trialDays}
-          onStartTrial={handleStartTrial}
-          onBack={() => setPaywallStep(1)}
-        />
+        <PlanSelectionScreen trialDays={trialDays} onStartTrial={handleStartTrial} onBack={() => setPaywallStep(1)} />
       )}
     </View>
   );
