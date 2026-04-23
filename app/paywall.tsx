@@ -32,7 +32,7 @@ const C = {
   surface:     "#EFECE7",
   card:        "#EAE6E0",
   border:      "#D9D4CC",
-  forest:      "#2D3A3A",
+  forest:      "#004225",
   cognac:      "#A67C52",
   cognacLight: "#F0E6D8",
   brass:       "#D4AF37",

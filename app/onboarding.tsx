@@ -31,11 +31,11 @@ const C = {
   surface:     "#EFECE7",   // slightly deeper linen for cards
   card:        "#EAE6E0",   // card background
   border:      "#D9D4CC",   // subtle warm border
-  forest:      "#2D3A3A",   // British Racing Green — headlines, CTA fill
+  forest:      "#004225",   // True British Racing Green — headlines, CTA fill
   cognac:      "#A67C52",   // Polished Cognac — selected state, accent
   cognacLight: "#F0E6D8",   // cognac tint for selected card bg
   brass:       "#D4AF37",   // Muted Brass — premium moments only
-  text:        "#2D3A3A",   // same as forest for body
+  text:        "#2D3A3A",   // deep forest for body text
   textMuted:   "#7A7468",   // warm grey
   white:       "#FFFFFF",
 };
