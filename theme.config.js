@@ -1,21 +1,24 @@
 /** @type {const} */
 const themeColors = {
-  // ── Dark: neon green + orange on pure black (Apple-premium dark mode)
-  // ── Light: kept clean for any light-mode fallback
-  primary:    { light: '#22C55E', dark: '#39FF14' },   // neon green
-  accent:     { light: '#F97316', dark: '#FF8C00' },   // vivid orange
-  background: { light: '#FFFFFF', dark: '#000000' },   // pure black
-  surface:    { light: '#F8FAFC', dark: '#0D0D0D' },   // near-black surface
-  foreground: { light: '#111827', dark: '#F5F5F5' },   // near-white text
-  muted:      { light: '#6B7280', dark: '#6B7280' },   // muted grey
-  border:     { light: '#E5E7EB', dark: '#1C1C1E' },   // subtle dark border
-  success:    { light: '#22C55E', dark: '#39FF14' },   // neon green
-  warning:    { light: '#F59E0B', dark: '#FF8C00' },   // orange
-  error:      { light: '#EF4444', dark: '#FF453A' },   // iOS red
-  card:       { light: '#FFFFFF', dark: '#111111' },   // dark card
-  protein:    { light: '#EAB308', dark: '#FFD60A' },   // yellow
-  carbs:      { light: '#3B82F6', dark: '#0A84FF' },   // iOS blue
-  fat:        { light: '#A855F7', dark: '#BF5AF2' },   // iOS purple
+  // ── Country Estate: Forest & Cognac on Warm Linen
+  // Primary: #2D3A3A (British Racing Green / Deep Forest)
+  // Secondary: #A67C52 (Polished Cognac Leather)
+  // Accent: #D4AF37 (Muted Brass)
+  // Background: #F4F1ED (Warm Linen)
+  primary:    { light: '#2D3A3A', dark: '#2D3A3A' },   // British Racing Green
+  accent:     { light: '#A67C52', dark: '#A67C52' },   // Polished Cognac
+  background: { light: '#F4F1ED', dark: '#F4F1ED' },   // Warm Linen
+  surface:    { light: '#EFECE7', dark: '#EFECE7' },   // Slightly deeper linen
+  foreground: { light: '#2D3A3A', dark: '#2D3A3A' },   // Forest text
+  muted:      { light: '#7A7468', dark: '#7A7468' },   // Warm grey
+  border:     { light: '#D9D4CC', dark: '#D9D4CC' },   // Warm border
+  success:    { light: '#2D3A3A', dark: '#2D3A3A' },   // Forest green
+  warning:    { light: '#D4AF37', dark: '#D4AF37' },   // Muted Brass
+  error:      { light: '#C0392B', dark: '#C0392B' },   // Deep red
+  card:       { light: '#EAE6E0', dark: '#EAE6E0' },   // Card linen
+  protein:    { light: '#A67C52', dark: '#A67C52' },   // Cognac
+  carbs:      { light: '#2D3A3A', dark: '#2D3A3A' },   // Forest
+  fat:        { light: '#D4AF37', dark: '#D4AF37' },   // Brass
 };
 
 module.exports = { themeColors };

@@ -13,8 +13,8 @@ const ThemeContext = createContext<ThemeContextValue | null>(null);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const systemScheme = useSystemColorScheme() ?? "light";
-  // Force dark mode for neon-on-black design
-  const [colorScheme, setColorSchemeState] = useState<ColorScheme>("dark");
+  // Force light mode for Country Estate luxury design
+  const [colorScheme, setColorSchemeState] = useState<ColorScheme>("light");
 
   const applyScheme = useCallback((scheme: ColorScheme) => {
     nativewindColorScheme.set(scheme);
