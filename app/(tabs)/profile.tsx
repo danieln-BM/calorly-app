@@ -164,6 +164,25 @@ export default function ProfileScreen() {
     );
   };
 
+  const handleResetOnboarding = () => {
+    Alert.alert(
+      "Restart Onboarding",
+      "This will take you back to the beginning of the setup flow. Your existing data will be kept.",
+      [
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "Restart",
+          style: "default",
+          onPress: async () => {
+            const current = await import("@/lib/store").then(m => m.loadProfile());
+            await import("@/lib/store").then(m => m.saveProfile({ ...current, onboardingComplete: false }));
+            router.replace("/onboarding");
+          },
+        },
+      ]
+    );
+  };
+
   const handleClearData = () => {
     Alert.alert(
       "Clear All Data",
@@ -549,6 +568,11 @@ export default function ProfileScreen() {
                   overflow: "hidden",
                 }}
               >
+                <SettingRow
+                  icon="↩️"
+                  label="Restart Onboarding"
+                  onPress={handleResetOnboarding}
+                />
                 <SettingRow
                   icon="🗑️"
                   label="Clear All Data"
