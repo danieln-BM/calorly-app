@@ -283,7 +283,7 @@ export default function OnboardingScreen() {
             </Text>
           </View>
 
-          <PrimaryCTA label="I Understand — Continue" onPress={() => setShowDisclaimer(false)} />
+          <PrimaryCTA label="Start my journey" onPress={() => setShowDisclaimer(false)} />
         </ScrollView>
       </View>
     );
