@@ -3,7 +3,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Platform } from "react-native";
 
 import { HapticTab } from "@/components/haptic-tab";
-import { IconSymbol } from "@/components/ui/icon-symbol";
+import { WebIcon } from "@/components/ui/web-icon";
 import { useColors } from "@/hooks/use-colors";
 
 export default function TabLayout() {
@@ -42,35 +42,35 @@ export default function TabLayout() {
         name="index"
         options={{
           title: "Home",
-          tabBarIcon: ({ color }) => <IconSymbol size={24} name="house.fill" color={color} />,
+          tabBarIcon: ({ color }) => <WebIcon name="home" size={24} color={color} />,
         }}
       />
       <Tabs.Screen
         name="log"
         options={{
           title: "Log",
-          tabBarIcon: ({ color }) => <IconSymbol size={24} name="plus.circle.fill" color={color} />,
+          tabBarIcon: ({ color }) => <WebIcon name="log" size={24} color={color} />,
         }}
       />
       <Tabs.Screen
         name="exercise"
         options={{
           title: "Exercise",
-          tabBarIcon: ({ color }) => <IconSymbol size={24} name="figure.run" color={color} />,
+          tabBarIcon: ({ color }) => <WebIcon name="exercise" size={24} color={color} />,
         }}
       />
       <Tabs.Screen
         name="progress"
         options={{
           title: "Progress",
-          tabBarIcon: ({ color }) => <IconSymbol size={24} name="chart.bar.fill" color={color} />,
+          tabBarIcon: ({ color }) => <WebIcon name="progress" size={24} color={color} />,
         }}
       />
       <Tabs.Screen
         name="profile"
         options={{
           title: "Profile",
-          tabBarIcon: ({ color }) => <IconSymbol size={24} name="person.fill" color={color} />,
+          tabBarIcon: ({ color }) => <WebIcon name="profile" size={24} color={color} />,
         }}
       />
     </Tabs>

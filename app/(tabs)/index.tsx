@@ -13,7 +13,7 @@ import { useFocusEffect, useRouter } from "expo-router";
 import Svg, { Circle } from "react-native-svg";
 
 import { ScreenContainer } from "@/components/screen-container";
-import { IconSymbol } from "@/components/ui/icon-symbol";
+import { WebIcon } from "@/components/ui/web-icon";
 import { useColors } from "@/hooks/use-colors";
 import { useSubscription } from "@/lib/subscription-provider";
 import { FREE_TIER_DAILY_LOG_LIMIT } from "@/lib/subscription";
@@ -207,7 +207,7 @@ function MealSection({
               },
             ]}
           >
-            <IconSymbol name="plus" size={18} color="#fff" />
+            <WebIcon name="plus" size={18} color="#fff" />
           </Pressable>
         </View>
       </View>
@@ -408,7 +408,7 @@ export default function HomeScreen() {
             onPress={() => changeDate(-1)}
             style={({ pressed }) => ({ opacity: pressed ? 0.5 : 1 })}
           >
-            <IconSymbol name="chevron.left" size={24} color={colors.foreground} />
+            <WebIcon name="chevron-left" size={24} color={colors.foreground} />
           </Pressable>
           <Text style={{ fontSize: 18, fontWeight: "700", color: colors.foreground }}>
             {formatDate(currentDate)}
@@ -420,7 +420,7 @@ export default function HomeScreen() {
             })}
             disabled={currentDate === getTodayString()}
           >
-            <IconSymbol name="chevron.right" size={24} color={colors.foreground} />
+            <WebIcon name="chevron-right" size={24} color={colors.foreground} />
           </Pressable>
         </View>
 
@@ -565,7 +565,7 @@ export default function HomeScreen() {
                   opacity: pressed ? 0.6 : 1,
                 })}
               >
-                <IconSymbol name="minus" size={16} color={colors.foreground} />
+                <WebIcon name="minus" size={16} color={colors.foreground} />
               </Pressable>
               <Text style={{ fontSize: 18, fontWeight: "800", color: colors.foreground, minWidth: 28, textAlign: "center" }}>
                 {waterCups}
@@ -582,7 +582,7 @@ export default function HomeScreen() {
                   opacity: pressed ? 0.7 : 1,
                 })}
               >
-                <IconSymbol name="plus" size={16} color="#fff" />
+                <WebIcon name="plus" size={16} color="#fff" />
               </Pressable>
             </View>
           </View>
@@ -722,7 +722,7 @@ export default function HomeScreen() {
                 justifyContent: "center",
               }}
             >
-              <IconSymbol name="flame.fill" size={22} color={colors.primary} />
+              <WebIcon name="flame" size={22} color={colors.primary} />
             </View>
             <View>
               <Text style={{ fontSize: 15, fontWeight: "700", color: colors.foreground }}>

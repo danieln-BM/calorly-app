@@ -1,10 +1,96 @@
-// Fallback for using MaterialIcons on Android and web.
-
+/**
+ * IconSymbol — cross-platform icon component.
+ * On web: uses inline SVG (WebIcon) — zero font dependency, renders everywhere.
+ * On native: uses MaterialIcons from @expo/vector-icons.
+ */
+import { Platform } from "react-native";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { SymbolWeight } from "expo-symbols";
 import { OpaqueColorValue, type StyleProp, type TextStyle } from "react-native";
+import { WebIcon } from "./web-icon";
 
 type IconSymbolName = keyof typeof MAPPING;
+
+// Map SF Symbol names → WebIcon names for web
+const WEB_MAPPING: Record<string, string> = {
+  "house.fill": "home",
+  "barcode.viewfinder": "barcode",
+  "person.fill": "profile",
+  "chart.bar.fill": "progress",
+  "plus.circle.fill": "log",
+  "figure.run": "exercise",
+  "chevron.right": "chevron-right",
+  "chevron.left": "chevron-left",
+  "chevron.down": "chevron-right",
+  "chevron.up": "chevron-left",
+  "flame.fill": "flame",
+  "drop.fill": "water",
+  "cup.and.saucer.fill": "water",
+  "plus": "plus",
+  "minus": "minus",
+  "xmark": "close",
+  "xmark.circle.fill": "close",
+  "checkmark": "check",
+  "checkmark.circle.fill": "check",
+  "trash.fill": "trash",
+  "pencil": "edit",
+  "square.and.pencil": "edit",
+  "magnifyingglass": "search",
+  "gear": "settings",
+  "info.circle.fill": "info",
+  "exclamationmark.triangle.fill": "info",
+  "arrow.left": "chevron-left",
+  "arrow.right": "chevron-right",
+  "arrow.clockwise": "arrow-up",
+  "star.fill": "star",
+  "heart.fill": "star",
+  "bookmark.fill": "star",
+  "lock.fill": "lock",
+  "scalemass.fill": "scale",
+  "trophy.fill": "star",
+  "calendar": "calendar",
+  "clock.fill": "clock",
+  "arrow.up.right": "arrow-up",
+  "arrow.down.right": "arrow-down",
+  "minus.circle": "minus",
+  "plus.circle": "plus",
+  "rectangle.stack.fill": "log",
+  "square.stack.3d.up.fill": "log",
+  "bolt.fill": "flame",
+  "dumbbell.fill": "exercise",
+  "figure.walk": "exercise",
+  "figure.outdoor.cycle": "exercise",
+  "figure.pool.swim": "exercise",
+  "figure.jumprope": "exercise",
+  "figure.elliptical": "exercise",
+  "figure.rowing": "exercise",
+  "figure.stair.stepper": "exercise",
+  "figure.dance": "exercise",
+  "figure.aerobics": "exercise",
+  "figure.strengthtraining.functional": "exercise",
+  "figure.strengthtraining.traditional": "exercise",
+  "figure.pilates": "exercise",
+  "figure.yoga": "exercise",
+  "figure.flexibility": "exercise",
+  "figure.taichi": "exercise",
+  "figure.tennis": "exercise",
+  "figure.golf": "exercise",
+  "figure.hiking": "exercise",
+  "sportscourt.fill": "exercise",
+  "fork.knife": "log",
+  "cart.fill": "log",
+  "leaf.fill": "star",
+  "bell.fill": "info",
+  "share": "arrow-up",
+  "doc.text.fill": "info",
+  "eye.fill": "info",
+  "eye.slash.fill": "close",
+  "moon.fill": "star",
+  "sun.max.fill": "star",
+  "target": "progress",
+  "paperplane.fill": "arrow-up",
+  "chevron.left.forwardslash.chevron.right": "close",
+};
 
 const MAPPING = {
   // Navigation
@@ -105,5 +191,11 @@ export function IconSymbol({
   style?: StyleProp<TextStyle>;
   weight?: SymbolWeight;
 }) {
+  // On web: use inline SVG — guaranteed to render without font loading
+  if (Platform.OS === "web") {
+    const svgName = (WEB_MAPPING[name] ?? "info") as any;
+    return <WebIcon name={svgName} size={size} color={color as string} />;
+  }
+  // On native: use MaterialIcons
   return <MaterialIcons color={color} size={size} name={MAPPING[name]} style={style} />;
 }
