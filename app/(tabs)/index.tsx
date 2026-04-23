@@ -7,6 +7,7 @@ import {
   FlatList,
   ActivityIndicator,
   TextInput,
+  Image,
 } from "react-native";
 import { useFocusEffect, useRouter } from "expo-router";
 import Svg, { Circle } from "react-native-svg";
@@ -669,11 +670,21 @@ export default function HomeScreen() {
           </View>
         </View>
 
+        {/* Editorial food photo — visual divider before meals */}
+        <View style={{ marginHorizontal: 16, marginBottom: 16, borderRadius: 16, overflow: "hidden", height: 160 }}>
+          <Image
+            source={require("@/assets/images/food/fruit-bowl.webp")}
+            style={{ width: "100%", height: "100%" }}
+            resizeMode="cover"
+          />
+          <View style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: 60, backgroundColor: "#2D3A3A", opacity: 0.45 }} />
+          <View style={{ position: "absolute", bottom: 12, left: 16 }}>
+            <Text style={{ fontSize: 16, fontWeight: "800", color: "#F4F1ED", letterSpacing: -0.3 }}>Today's Meals</Text>
+          </View>
+        </View>
+
         {/* Meal Sections */}
         <View style={{ paddingHorizontal: 16 }}>
-          <Text style={{ fontSize: 18, fontWeight: "700", color: colors.foreground, marginBottom: 12 }}>
-            Meals
-          </Text>
           {MEAL_TYPES.map((meal) => (
             <MealSection
               key={meal}

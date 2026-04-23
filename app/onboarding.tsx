@@ -8,6 +8,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   Alert,
+  Image,
 } from "react-native";
 import { useRouter } from "expo-router";
 
@@ -250,8 +251,19 @@ export default function OnboardingScreen() {
     return (
       <View style={{ flex: 1, backgroundColor: C.bg }}>
         <ScrollView contentContainerStyle={{ flexGrow: 1, paddingHorizontal: 24, paddingBottom: 40 }} showsVerticalScrollIndicator={false}>
+          {/* Hero image */}
+          <View style={{ marginHorizontal: -24, marginTop: -0, marginBottom: 32, height: 260, overflow: "hidden" }}>
+            <Image
+              source={require("@/assets/images/food/fitness-woman.webp")}
+              style={{ width: "100%", height: "100%" }}
+              resizeMode="cover"
+            />
+            {/* Linen gradient overlay at bottom */}
+            <View style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: 80, backgroundColor: C.bg, opacity: 0.6 }} />
+          </View>
+
           {/* Wordmark */}
-          <View style={{ alignItems: "center", paddingTop: 72, marginBottom: 48 }}>
+          <View style={{ alignItems: "center", marginBottom: 32 }}>
             <Text style={{ fontSize: 42, fontWeight: "800", color: C.forest, letterSpacing: -1.5 }}>Calorly</Text>
             <Text style={{ fontSize: 14, color: C.cognac, marginTop: 6, letterSpacing: 2, textTransform: "uppercase", fontWeight: "600" }}>
               Your Nutrition Companion
@@ -416,8 +428,16 @@ export default function OnboardingScreen() {
 
     // ── Step 5: 80/20 Reveal ─────────────────────────────────────────────────
     <Screen key="step5">
+      {/* Editorial food image */}
+      <View style={{ marginHorizontal: -24, marginTop: -0, marginBottom: 24, height: 200, overflow: "hidden", borderRadius: 0 }}>
+        <Image
+          source={require("@/assets/images/food/ingredients-flatlay.webp")}
+          style={{ width: "100%", height: "100%" }}
+          resizeMode="cover"
+        />
+      </View>
       {/* Big stat */}
-      <View style={{ alignItems: "center", paddingTop: 16, marginBottom: 24 }}>
+      <View style={{ alignItems: "center", paddingTop: 0, marginBottom: 24 }}>
         <Text style={{ fontSize: 96, fontWeight: "800", color: C.forest, letterSpacing: -4, lineHeight: 96 }}>80%</Text>
         <View style={{ width: 40, height: 2, backgroundColor: C.brass, borderRadius: 1, marginTop: 8 }} />
       </View>
@@ -460,6 +480,17 @@ export default function OnboardingScreen() {
 
     // ── Step 7: AI Introduction ──────────────────────────────────────────────
     <Screen key="step7">
+      {/* Demo food photo — the "snap your meal" visual */}
+      <View style={{ marginHorizontal: -24, marginTop: -0, marginBottom: 24, height: 220, overflow: "hidden" }}>
+        <Image
+          source={require("@/assets/images/food/salad-bowl.webp")}
+          style={{ width: "100%", height: "100%" }}
+          resizeMode="cover"
+        />
+        <View style={{ position: "absolute", bottom: 12, right: 12, backgroundColor: C.forest + "CC", borderRadius: 10, paddingHorizontal: 12, paddingVertical: 6 }}>
+          <Text style={{ color: C.bg, fontSize: 12, fontWeight: "700", letterSpacing: 0.5 }}>📸 Snap to log</Text>
+        </View>
+      </View>
       <Headline>Your AI{"\n"}nutrition coach.</Headline>
       <SubText>Calorly uses computer vision and natural language AI to make logging fast.</SubText>
 
